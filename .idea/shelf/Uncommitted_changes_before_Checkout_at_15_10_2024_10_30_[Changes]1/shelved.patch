@@ -1,0 +1,16 @@
+Index: .idea/modules.xml
+===================================================================
+diff --git a/.idea/modules.xml b/.idea/modules.xml
+deleted file mode 100644
+--- a/.idea/modules.xml	(revision 6a4828727e3e2dc819da2d00a9e2ef1f9ccf3f35)
++++ /dev/null	(revision 6a4828727e3e2dc819da2d00a9e2ef1f9ccf3f35)
+@@ -1,8 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="ProjectModuleManager">
+-    <modules>
+-      <module fileurl="file://$PROJECT_DIR$/.idea/Projeto-Integrador-IV.iml" filepath="$PROJECT_DIR$/.idea/Projeto-Integrador-IV.iml" />
+-    </modules>
+-  </component>
+-</project>
+\ No newline at end of file
