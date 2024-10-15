@@ -3,18 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tela de Cadastro</title>
+    <title>Login Pet Shop</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <div class="form-box">
-            <h1>Cadastro</h1>
+        <div class="login-box">
+            <h1>Bem-vindo a PetCare</h1>
             <form action="#">
-                <div class="input-group">
-                    <label for="nome">Nome </label>
-                    <input type="text" id="nome" name="nome" required>
-                </div>
                 <div class="input-group">
                     <label for="email">E-mail</label>
                     <input type="email" id="email" name="email" required>
@@ -23,19 +19,18 @@
                     <label for="senha">Senha</label>
                     <input type="password" id="senha" name="senha" required>
                 </div>
-                <div class="input-group">
-                    <label for="confirma-senha">Confirmar Senha</label>
-                    <input type="password" id="confirma-senha" name="confirma-senha" required>
+                <button type="submit">Entrar</button>
+                <div class="extras">
+                    <a href="#">Esqueceu a senha?</a>
+                    <a href="#">Criar uma conta</a>
                 </div>
-                <button type="submit">Cadastrar</button>
             </form>
         </div>
     </div>
 </body>
 </html>
-
 <style>
-* {
+    * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -43,13 +38,14 @@
 
 body {
     font-family: 'Arial', sans-serif;
-    background-image: url('https://sebrae.com.br/Sebrae/Portal%20Sebrae/Ideias%20de%20Negocio/Importer/Images/298_background.webp'); /* Substitua pelo link da imagem desejada */
+    background-image: url('https://www.cypressvethospital.com/files/2019/11/GettyImages-1164273113-1.jpg'); /* Link de imagem de fundo relacionado a pets */
     background-size: cover;
     background-position: center;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    color: #fff;
 }
 
 .container {
@@ -58,21 +54,23 @@ body {
     padding: 20px;
 }
 
-.form-box {
-    background-color: rgba(255, 255, 255, 0.9); /* Transparência para destacar o formulário */
+.login-box {
+    background-color: rgba(255, 255, 255, 0.95); /* Fundo branco com leve transparência */
     padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Sombra para dar profundidade */
+    text-align: center;
 }
 
 h1 {
-    text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    font-size: 28px;
     color: #333;
 }
 
 .input-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    text-align: left;
 }
 
 .input-group label {
@@ -84,16 +82,16 @@ h1 {
 
 .input-group input {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
+    padding: 12px;
+    border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 16px;
 }
 
 button {
     width: 100%;
-    padding: 10px;
-    background-color: #ff6600; /* Cor vibrante para lembrar pet shop */
+    padding: 12px;
+    background-color: #ff6600; /* Laranja vibrante para o tema pet shop */
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -106,9 +104,25 @@ button:hover {
     background-color: #e65c00;
 }
 
-/* Responsivo */
+.extras {
+    margin-top: 15px;
+}
+
+.extras a {
+    color: #ff6600;
+    text-decoration: none;
+    font-size: 14px;
+    margin: 0 10px;
+    transition: color 0.3s ease;
+}
+
+.extras a:hover {
+    color: #e65c00;
+}
+
+/* Responsividade */
 @media (max-width: 768px) {
-    .form-box {
+    .login-box {
         padding: 20px;
     }
 
