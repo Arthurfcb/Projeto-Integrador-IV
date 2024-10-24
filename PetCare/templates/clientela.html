@@ -8,38 +8,65 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             background-color: #f0f0f5;
             margin: 0;
-            padding: 20px;
+        }
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
         }
         h1 {
-            text-align: center;
+            font-size: 28px;
             margin-bottom: 20px;
             color: #333;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #28a745;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .btn:hover {
+            background-color: #218838;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
+            margin-top: 20px;
         }
         th, td {
-            padding: 12px;
-            text-align: left;
             border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
         }
         th {
-            background-color: #28a745;
-            color: white;
+            background-color: #f2f2f2;
         }
-        .btn-deletar {
+        .delete-btn {
             background-color: #dc3545;
             color: white;
             border: none;
-            padding: 8px 12px;
             border-radius: 5px;
+            padding: 8px 12px;
             cursor: pointer;
         }
-        .btn-deletar:hover {
+        .delete-btn:hover {
             background-color: #c82333;
         }
     </style>
@@ -48,30 +75,51 @@
 
 <div class="container">
     <h1>Lista de Clientes</h1>
+    <p>Aqui você poderá ver e gerenciar os clientes cadastrados.</p>
+
+    <!-- Mensagens de feedback -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
     <table>
         <thead>
             <tr>
                 <th>Nome</th>
                 <th>Nome do Pet</th>
                 <th>Email</th>
-                <th>Ações</th>
+                <th>Ação</th>
             </tr>
         </thead>
         <tbody>
-            {% for cliente in clientela %}
-            <tr>
-                <td>{{ cliente.nome }}</td>
-                <td>{{ cliente.nome_pet }}</td>
-                <td>{{ cliente.email }}</td>
-                <td>
-                    <form action="{{ url_for('deletar_cliente', cliente_id=cliente._id) }}" method="POST" style="display:inline;">
-                        <button type="submit" class="btn-deletar">Deletar</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
+            {% if clientela %}
+                {% for cliente in clientela %}
+                    <tr>
+                        <td>{{ cliente.nome }}</td>
+                        <td>{{ cliente.nome_pet }}</td>
+                        <td>{{ cliente.email }}</td>
+                        <td>
+                            <form action="{{ url_for('deletar_cliente', cliente_id=cliente._id) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="delete-btn">Deletar</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="4">Sem clientes cadastrados disponíveis no momento.</td>
+                </tr>
+            {% endif %}
         </tbody>
     </table>
+
+    <a href="/" class="btn">Voltar para a Tela Principal</a>
 </div>
 
 </body>

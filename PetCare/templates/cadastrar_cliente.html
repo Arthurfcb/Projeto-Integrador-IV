@@ -27,6 +27,11 @@
             text-align: center;
             margin-bottom: 30px;
         }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
         input {
             width: 100%;
             padding: 12px;
@@ -92,9 +97,14 @@
     {% endwith %}
 
     <form action="/register_cliente" method="POST"> <!-- Rota para processar o cadastro -->
-        <input type="text" name="nome" placeholder="Nome do Cliente" required>
-        <input type="text" name="nome_pet" placeholder="Nome do Pet" required>
-        <input type="email" name="email" placeholder="Email do Cliente" required>
+        <label for="nome">Nome do Cliente:</label>
+        <input type="text" name="nome" required>
+
+        <label for="nome_pet">Nome do Pet:</label>
+        <input type="text" name="nome_pet" required>
+
+        <label for="email">Email do Cliente:</label>
+        <input type="email" name="email" required>
 
         <button type="submit" class="cadastrar">Cadastrar</button>
     </form>
