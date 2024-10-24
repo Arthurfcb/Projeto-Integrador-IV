@@ -47,6 +47,15 @@ def prontuario():
     else:
         return redirect(url_for('login'))
 
+# Rota para cadastrar cliente
+@app.route('/cadastrar_cliente')
+def cadastrar_cliente():
+    if 'username' in session:
+        return render_template('cadastrar_cliente.html')  # Renderiza a página de cadastro de cliente
+    else:
+        return redirect(url_for('login'))
+
+
 # Rota para agendamentos
 @app.route('/agendamentos')
 def agendamentos():
@@ -117,6 +126,57 @@ def agendar():
         return render_template('agendamento.html', mensagem=mensagem)  # Renderiza a página com a mensagem
     else:
         return redirect(url_for('login'))
+
+# Rota para cadastrar cliente
+@app.route('/register_cliente', methods=['POST'])
+def register_cliente():
+    if 'username' in session:  # Verifica se o usuário está logado
+        nome = request.form['nome']  # Obtém o nome do cliente
+        nome_pet = request.form['nome_pet']  # Obtém o nome do pet
+        email = request.form['email']  # Obtém o email do cliente
+
+        # Dados a serem inseridos no MongoDB
+        cliente_data = {
+            'nome': nome,
+            'nome_pet': nome_pet,
+            'email': email
+        }
+
+        try:
+            # Inserir os dados na coleção 'RegistrosClientela'
+            db['RegistrosClientela'].insert_one(cliente_data)
+            flash("Cliente cadastrado com sucesso!", "success")  # Mensagem de sucesso
+        except Exception as e:
+            flash(f"Erro ao cadastrar cliente: {str(e)}", "error")  # Mensagem de erro
+
+        return redirect(url_for('cadastrar_cliente'))  # Redireciona de volta para a página de cadastro
+    else:
+        return redirect(url_for('login'))
+
+# Rota para consultar a clientela
+@app.route('/consultar_clientela')
+def consultar_clientela():
+    if 'username' in session:
+        # Recupera todos os clientes da coleção 'RegistrosClientela'
+        clientela = list(db['RegistrosClientela'].find())  # Busca todos os clientes
+        return render_template('clientela.html', clientela=clientela)  # Passa os clientes para o template
+    else:
+        return redirect(url_for('login'))
+
+# Rota para deletar cliente
+@app.route('/deletar_cliente/<cliente_id>', methods=['POST'])
+def deletar_cliente(cliente_id):
+    if 'username' in session:
+        try:
+            db['RegistrosClientela'].delete_one({'_id': ObjectId(cliente_id)})
+            flash("Cliente deletado com sucesso!", "success")  # Mensagem de sucesso
+        except Exception as e:
+            flash(f"Erro ao deletar cliente: {str(e)}", "error")  # Mensagem de erro
+        return redirect(url_for('consultar_clientela'))  # Redireciona de volta para a página de consulta de clientela
+    else:
+        return redirect(url_for('login'))
+
+
 
 # Rota de logout para encerrar a sessão
 @app.route('/logout')

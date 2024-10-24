@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Cliente</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f5;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            border: none;
+            padding: 15px;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: opacity 0.3s; /* Transição suave para hover */
+        }
+        button:hover {
+            opacity: 0.9; /* Diminui a opacidade ao passar o mouse */
+        }
+        .cadastrar {
+            background-color: #28a745; /* Verde para o botão de cadastrar */
+        }
+        .cadastrar:hover {
+            background-color: #218838; /* Escurece o verde no hover */
+        }
+        .voltar {
+            background-color: #007bff; /* Azul para o botão de voltar */
+            margin-top: 10px; /* Espaço entre os botões */
+        }
+        .voltar:hover {
+            background-color: #0056b3; /* Escurece o azul no hover */
+        }
+        .alert {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Cadastrar Cliente</h1>
+
+    <!-- Exibir mensagens flash -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert {{ category }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form action="/register_cliente" method="POST"> <!-- Rota para processar o cadastro -->
+        <input type="text" name="nome" placeholder="Nome do Cliente" required>
+        <input type="text" name="nome_pet" placeholder="Nome do Pet" required>
+        <input type="email" name="email" placeholder="Email do Cliente" required>
+
+        <button type="submit" class="cadastrar">Cadastrar</button>
+    </form>
+
+    <!-- Botão para voltar à home -->
+    <button class="voltar" onclick="window.location.href='/'">Voltar para a Tela Principal</button>
+</div>
+
+</body>
+</html>
