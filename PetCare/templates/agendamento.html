@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendar Consulta</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f5;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            border: none;
+            padding: 15px;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            opacity: 0.9; /* Diminui a opacidade ao passar o mouse */
+        }
+        .agendar {
+            background-color: #28a745; /* Verde para o botão de agendar */
+        }
+        .agendar:hover {
+            background-color: #218838; /* Escurece o verde no hover */
+        }
+        .voltar {
+            background-color: #007bff; /* Azul para o botão de voltar */
+            margin-top: 10px; /* Espaço entre os botões */
+        }
+        .voltar:hover {
+            background-color: #0056b3; /* Escurece o azul no hover */
+        }
+        .mensagem {
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 18px;
+        }
+        .success {
+            color: #28a745; /* Verde para sucesso */
+        }
+        .error {
+            color: #dc3545; /* Vermelho para erro */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Agendar Consulta</h1>
+
+    <!-- Exibir mensagens de sucesso ou erro -->
+    {% if mensagem %}
+        <div class="mensagem {% if 'Erro' in mensagem %}error{% else %}success{% endif %}">
+            {{ mensagem }}
+        </div>
+    {% endif %}
+
+    <form action="/agendar" method="POST">
+        <label for="date">Data:</label>
+        <input type="date" name="date" required>
+
+        <label for="time">Horário:</label>
+        <input type="time" name="time" required>
+
+        <label for="description">Descrição:</label>
+        <textarea name="description" rows="4" placeholder="Digite uma breve descrição da consulta" required></textarea>
+
+        <button type="submit" class="agendar">Agendar</button>
+    </form>
+
+    <!-- Botão para voltar à home -->
+    <button class="voltar" onclick="window.location.href='/'">Voltar para a Home</button>
+</div>
+
+</body>
+</html>

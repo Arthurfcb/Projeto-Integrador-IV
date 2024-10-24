@@ -18,23 +18,28 @@
         .container {
             text-align: center;
             background-color: #fff;
-            padding: 50px;
+            padding: 40px;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            max-width: 450px; /* Ajusta a largura do container */
+            width: 100%;
         }
         h1 {
-            font-size: 36px;
+            font-size: 28px;
             margin-bottom: 20px;
             color: #333;
         }
         p {
             font-size: 18px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             color: #666;
         }
         .btn {
-            padding: 15px 30px;
-            font-size: 18px;
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px; /* Ajusta o espaçamento entre os botões */
+            font-size: 16px;
             color: white;
             background-color: #28a745;
             border: none;
@@ -45,14 +50,24 @@
         .btn:hover {
             background-color: #218838;
         }
+        .btn-logout {
+            background-color: #dc3545;
+        }
+        .btn-logout:hover {
+            background-color: #c82333;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1>Bem-vindo à Tela Principal</h1>
-    <p>Clique no botão abaixo para acessar o prontuário</p>
-    <a href="/prontuario" class="btn">Acessar Prontuário</a>
+    <p>Escolha uma das opções abaixo:</p>
+
+    <a href="/prontuario" class="btn">Acessar Prontuários</a>
+    <a href="/agendamentos" class="btn">Agendamentos de Consultas</a>
+    <a href="/agendamentos_antigos" class="btn">Consultar Antigos Agendamentos</a>
+    <a href="/logout" class="btn btn-logout">Sair da Conta</a>
 </div>
 
 </body>
