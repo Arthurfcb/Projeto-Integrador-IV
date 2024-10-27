@@ -12,7 +12,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f0f0f5;
+            background: linear-gradient(135deg, #a8e0f6 0%, #f0f0f5 100%);
             margin: 0;
         }
         .container {
@@ -49,20 +49,20 @@
             cursor: pointer;
         }
         button:hover {
-            opacity: 0.9; /* Diminui a opacidade ao passar o mouse */
+            opacity: 0.9;
         }
         .agendar {
-            background-color: #28a745; /* Verde para o botão de agendar */
+            background-color: #28a745;
         }
         .agendar:hover {
-            background-color: #218838; /* Escurece o verde no hover */
+            background-color: #218838;
         }
         .voltar {
-            background-color: #007bff; /* Azul para o botão de voltar */
-            margin-top: 10px; /* Espaço entre os botões */
+            background-color: #007bff;
+            margin-top: 10px;
         }
         .voltar:hover {
-            background-color: #0056b3; /* Escurece o azul no hover */
+            background-color: #0056b3;
         }
         .mensagem {
             margin-bottom: 20px;
@@ -70,10 +70,10 @@
             font-size: 18px;
         }
         .success {
-            color: #28a745; /* Verde para sucesso */
+            color: #28a745;
         }
         .error {
-            color: #dc3545; /* Vermelho para erro */
+            color: #dc3545;
         }
     </style>
 </head>
@@ -82,7 +82,6 @@
 <div class="container">
     <h1>Agendar Consulta</h1>
 
-    <!-- Exibir mensagens de sucesso ou erro -->
     {% if mensagem %}
         <div class="mensagem {% if 'Erro' in mensagem %}error{% else %}success{% endif %}">
             {{ mensagem }}
@@ -90,6 +89,12 @@
     {% endif %}
 
     <form action="/agendar" method="POST">
+        <label for="cliente">Dono do Pet:</label>
+        <input type="text" name="cliente" required>
+
+        <label for="nome_pet">Nome do Pet:</label>
+        <input type="text" name="nome_pet" required>
+
         <label for="date">Data:</label>
         <input type="date" name="date" required>
 
@@ -102,7 +107,6 @@
         <button type="submit" class="agendar"><strong>Agendar</strong></button>
     </form>
 
-    <!-- Botão para voltar à home -->
     <button class="voltar" onclick="window.location.href='/'"><strong>Voltar para a Tela Principal</strong></button>
 </div>
 

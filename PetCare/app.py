@@ -39,11 +39,75 @@ def main():
     else:
         return redirect(url_for('login'))
 
-# Rota para o prontuário
-@app.route('/prontuario')
+# Rota para cadastrar prontuário
+@app.route('/prontuario', methods=['GET', 'POST'])
 def prontuario():
     if 'username' in session:
-        return render_template('prontuario.html')  # Rota para a página de prontuários
+        if request.method == 'POST':
+            nome_cliente = request.form['nome_cliente']
+            nome_pet = request.form['nome_pet']
+            alergias = request.form['alergias']
+            medicamentos = request.form['medicamentos']
+            condicoes = request.form['condicoes']
+            veterinario = request.form['veterinario']
+            data = request.form['data']
+
+            prontuario_data = {
+                'nome_cliente': nome_cliente,
+                'nome_pet': nome_pet,
+                'alergias': alergias,
+                'medicamentos': medicamentos,
+                'condicoes': condicoes,
+                'veterinario': veterinario,
+                'data': data
+            }
+
+            try:
+                # Insere o prontuário no MongoDB
+                db['Prontuarios'].insert_one(prontuario_data)
+                mensagem = "Prontuário cadastrado com sucesso!"  # Mensagem de sucesso
+                mensagem_tipo = "success"
+            except Exception as e:
+                mensagem = f"Erro ao cadastrar prontuário: {str(e)}"  # Mensagem de erro
+                mensagem_tipo = "error"
+
+            return render_template('prontuario.html', mensagem=mensagem, mensagem_tipo=mensagem_tipo)
+
+        return render_template('prontuario.html')
+    else:
+        return redirect(url_for('login'))
+
+# Rota para procurar prontuário por cliente e pet
+@app.route('/procurar_prontuario', methods=['GET', 'POST'])
+def procurar_prontuario():
+    if 'username' in session:
+        if request.method == 'POST':
+            nome_cliente = request.form['nome_cliente']
+            nome_pet = request.form['nome_pet']
+
+            # Procura o prontuário no MongoDB
+            prontuario = db['Prontuarios'].find_one({'nome_cliente': nome_cliente, 'nome_pet': nome_pet})
+
+            if prontuario:
+                return render_template('procurar_prontuario.html', prontuario=prontuario)
+            else:
+                mensagem = "Prontuário não encontrado para este cliente e pet."
+                return render_template('procurar_prontuario.html', mensagem=mensagem)
+
+        return render_template('procurar_prontuario.html')
+    else:
+        return redirect(url_for('login'))
+
+# Rota para deletar prontuário
+@app.route('/deletar_prontuario/<prontuario_id>', methods=['POST'])
+def deletar_prontuario(prontuario_id):
+    if 'username' in session:
+        try:
+            db['Prontuarios'].delete_one({'_id': ObjectId(prontuario_id)})
+            flash("Prontuário deletado com sucesso!", "success")  # Mensagem de sucesso
+        except Exception as e:
+            flash(f"Erro ao deletar prontuário: {str(e)}", "error")  # Mensagem de erro
+        return redirect(url_for('procurar_prontuario'))  # Redireciona de volta para a página de procura de prontuário
     else:
         return redirect(url_for('login'))
 
@@ -105,25 +169,28 @@ def register():
 @app.route('/agendar', methods=['POST'])
 def agendar():
     if 'username' in session:
-        data = request.form['date']  # Obter a data do formulário
-        horario = request.form['time']  # Obter o horário do formulário
-        descricao = request.form['description']  # Obter a descrição do formulário
+        data = request.form['date']
+        horario = request.form['time']
+        cliente = request.form['cliente']  # Nome do dono do pet
+        nome_pet = request.form['nome_pet']  # Nome do pet
+        descricao = request.form['description']
 
-        # Inserir o novo agendamento na coleção 'Agendamentos'
         agendamento_data = {
-            'username': session['username'],  # Associar o agendamento ao usuário logado
+            'username': session['username'],
             'data': data,
             'horario': horario,
+            'cliente': cliente,  # Nome do dono do pet
+            'nome_pet': nome_pet,  # Adiciona o nome do pet
             'descricao': descricao
         }
 
         try:
-            db['Agendamentos'].insert_one(agendamento_data)  # Salva no MongoDB
-            mensagem = "Agendamento realizado com sucesso!"  # Mensagem de sucesso
+            db['Agendamentos'].insert_one(agendamento_data)
+            mensagem = "Agendamento realizado com sucesso!"
         except Exception as e:
-            mensagem = f"Erro ao agendar: {str(e)}"  # Mensagem de erro
+            mensagem = f"Erro ao agendar: {str(e)}"
 
-        return render_template('agendamento.html', mensagem=mensagem)  # Renderiza a página com a mensagem
+        return render_template('agendamento.html', mensagem=mensagem)
     else:
         return redirect(url_for('login'))
 
