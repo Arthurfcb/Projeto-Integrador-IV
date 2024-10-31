@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendar Consulta</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* CSS Reset and Styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #a8e0f6 0%, #f0f0f5 100%);
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            border: none;
+            padding: 15px;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .agendar {
+            background-color: #28a745;
+        }
+
+        .agendar:hover {
+            background-color: #218838;
+        }
+
+        .voltar {
+            background-color: #007bff;
+            margin-top: 10px;
+        }
+
+        .voltar:hover {
+            background-color: #0056b3;
+        }
+
+        .mensagem {
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .success {
+            color: #28a745;
+        }
+
+        .error {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Agendar Consulta</h1>
+
+    {% if mensagem %}
+        <div class="mensagem {% if 'Erro' in mensagem %}error{% else %}success{% endif %}">
+            {{ mensagem }}
+        </div>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('agendar') }}">
+        {% if csrf_token %}
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        {% endif %}
+
+        <label for="cliente">Dono do Pet:</label>
+        <input type="text" name="cliente" required>
+
+        <label for="nome_pet">Nome do Pet:</label>
+        <input type="text" name="nome_pet" required>
+
+        <label for="date">Data:</label>
+        <input type="date" name="date" required>
+
+        <label for="time">Horário:</label>
+        <input type="time" name="time" required>
+
+        <label for="description">Descrição:</label>
+        <textarea name="description" rows="4" placeholder="Digite uma breve descrição da consulta" required></textarea>
+
+        <button type="submit" class="agendar"><strong>Agendar</strong></button>
+    </form>
+
+    <button class="voltar" onclick="window.location.href='/'"><strong>Voltar para a Tela Principal</strong></button>
+</div>
+
+</body>
+</html>
