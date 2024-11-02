@@ -15,6 +15,7 @@ client = mongo.cx
 db = client['Registros']
 users_collection = db['RegistrosCliente']
 
+
 # Rota de Login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -165,6 +166,14 @@ def register():
         return redirect(url_for('login'))
     return render_template('register.html')
 
+#Verificar se cliente está cadastrado
+def cliente_cadastrado(cliente,nome_pet):
+    dado_cliente = list(db['RegistrosClientela'].find({"nome":cliente, "nome_pet":nome_pet}))
+    if dado_cliente:
+        return True
+    else:
+        return False
+
 # Rota para agendar uma consulta
 @app.route('/agendar', methods=['POST'])
 def agendar():
@@ -184,13 +193,17 @@ def agendar():
             'descricao': descricao
         }
 
-        try:
-            db['Agendamentos'].insert_one(agendamento_data)
-            mensagem = "Agendamento realizado com sucesso!"
-        except Exception as e:
-            mensagem = f"Erro ao agendar: {str(e)}"
+        if cliente_cadastrado(cliente,nome_pet):
+            try:
+                db['Agendamentos'].insert_one(agendamento_data)
+                mensagem = "Agendamento realizado com sucesso!"
+            except Exception as e:
+                mensagem = f"Erro ao agendar: {str(e)}"
 
-        return render_template('agendamento.html', mensagem=mensagem)
+            return render_template('agendamento.html', mensagem=mensagem)
+        else:
+            mensagem = f"Usuario não encontrado"
+            return render_template('agendamento.html', mensagem=mensagem)
     else:
         return redirect(url_for('login'))
 
