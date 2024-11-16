@@ -253,5 +253,39 @@
             <span class="btn-text">Sair da Conta</span>
         </a>
     </div>
+    <script>
+        const ws = new WebSocket('ws://localhost:8887');
+        
+        ws.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            if (data.type === 'appointment_reminder') {
+                const hours = data.hours;
+                const message = `Lembrete: Consulta para ${data.pet} (cliente: ${data.client}) em ${hours} hora${hours > 1 ? 's' : ''}!\nData: ${data.date} às ${data.time}`;
+                
+                // Create and show notification
+                if (Notification.permission === "granted") {
+                    new Notification("Lembrete de Consulta", { body: message });
+                } else if (Notification.permission !== "denied") {
+                    Notification.requestPermission().then(permission => {
+                        if (permission === "granted") {
+                            new Notification("Lembrete de Consulta", { body: message });
+                        }
+                    });
+                }
+            }
+        };
+
+        ws.onerror = function(error) {
+            console.error('WebSocket error:', error);
+        };
+
+        ws.onclose = function() {
+            console.log('WebSocket connection closed');
+            // Attempt to reconnect after 5 seconds
+            setTimeout(() => {
+                window.location.reload();
+            }, 5000);
+        };
+    </script>
 </body>
 </html>
