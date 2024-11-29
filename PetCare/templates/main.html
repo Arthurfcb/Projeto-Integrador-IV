@@ -254,38 +254,30 @@
         </a>
     </div>
     <script>
-        const ws = new WebSocket('ws://localhost:8887');
-        
-        ws.onmessage = function(event) {
-            const data = JSON.parse(event.data);
-            if (data.type === 'appointment_reminder') {
-                const hours = data.hours;
-                const message = `Lembrete: Consulta para ${data.pet} (cliente: ${data.client}) em ${hours} hora${hours > 1 ? 's' : ''}!\nData: ${data.date} às ${data.time}`;
-                
-                // Create and show notification
-                if (Notification.permission === "granted") {
-                    new Notification("Lembrete de Consulta", { body: message });
-                } else if (Notification.permission !== "denied") {
-                    Notification.requestPermission().then(permission => {
-                        if (permission === "granted") {
-                            new Notification("Lembrete de Consulta", { body: message });
-                        }
-                    });
-                }
-            }
-        };
+        // Inicializa a conexão com o servidor
+        const socket = new WebSocket('ws://localhost:12345');
 
-        ws.onerror = function(error) {
-            console.error('WebSocket error:', error);
-        };
+        socket.addEventListener('open', (event) => {
+            console.log('Conectado ao servidor de notificações');
+        });
 
-        ws.onclose = function() {
-            console.log('WebSocket connection closed');
-            // Attempt to reconnect after 5 seconds
+        socket.addEventListener('message', (event) => {
+            const message = event.data;
+            console.log('Mensagem recebida:', message);
+            showNotification(message);
+        });
+
+        socket.addEventListener('error', (error) => {
+            console.error('Erro na conexão:', error);
+        });
+
+        socket.addEventListener('close', () => {
+            console.log('Conexão fechada');
+            // Tentar reconectar após 5 segundos
             setTimeout(() => {
                 window.location.reload();
             }, 5000);
-        };
+        });
     </script>
 </body>
 </html>

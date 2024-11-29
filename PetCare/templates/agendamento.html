@@ -119,11 +119,24 @@
         <label for="nome_pet">Nome do Pet:</label>
         <input type="text" name="nome_pet" required>
 
-        <label for="date">Data:</label>
-        <input type="date" name="date" required>
+        <div class="form-group">
+            <label for="date">Data:</label>
+            <input type="date" 
+                   id="date" 
+                   name="date" 
+                   min="{{ hoje }}" 
+                   required>
+        </div>
 
-        <label for="time">Horário:</label>
-        <input type="time" name="time" required>
+        <div class="form-group">
+            <label for="time">Horário:</label>
+            <input type="time" 
+                   id="time" 
+                   name="time" 
+                   min="08:00" 
+                   max="18:00" 
+                   required>
+        </div>
 
         <label for="description">Descrição:</label>
         <textarea name="description" rows="4" placeholder="Digite uma breve descrição da consulta" required></textarea>

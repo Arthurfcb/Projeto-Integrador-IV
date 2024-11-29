@@ -2,6 +2,9 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from flask_pymongo import PyMongo
 from config import Config
 from bson.objectid import ObjectId  # Importar ObjectId
+from datetime import datetime, timedelta
+import logging
+import sys
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -14,6 +17,15 @@ mongo = PyMongo(app)
 client = mongo.cx
 db = client['Registros']
 users_collection = db['RegistrosCliente']
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(sys.stdout)
+    ]
+)
 
 # Rota de Login
 @app.route('/login', methods=['GET', 'POST'])
@@ -124,7 +136,7 @@ def cadastrar_cliente():
 @app.route('/agendamentos')
 def agendamentos():
     if 'username' in session:
-        return render_template('agendamento.html')  # Rota para a página de agendamento
+        return render_template('agendamento.html')
     else:
         return redirect(url_for('login'))
 
@@ -132,13 +144,15 @@ def agendamentos():
 @app.route('/agendamentos_antigos')
 def agendamentos_antigos():
     if 'username' in session:
-        # Recupera todos os agendamentos da coleção 'Agendamentos'
-        agendamentos = list(db['Agendamentos'].find())  # Busca todos os agendamentos
-        for agendamento in agendamentos:
-            print(agendamento['_id'])  # Para verificar os IDs
-        return render_template('agendamento_antigo.html', agendamentos=agendamentos)  # Passa os agendamentos para o template
-    else:
-        return redirect(url_for('login'))
+        print("\n[INFO] Tentando acessar agendamentos antigos...")
+        try:
+            agendamentos = list(db['Agendamentos'].find())
+            print("Erro ao verificar agendamentos:")
+            return render_template('agendamento_antigo.html', agendamentos=agendamentos)
+        except Exception as e:
+            print(f"\n[ERRO] Não foi possível conectar ao banco de dados: {str(e)}\n")
+            return render_template('agendamento_antigo.html', agendamentos=None)
+    return redirect(url_for('login'))
 
 @app.route('/deletar_agendamento/<agendamento_id>', methods=['POST'])
 def deletar_agendamento(agendamento_id):
@@ -171,22 +185,44 @@ def agendar():
     if 'username' in session:
         data = request.form['date']
         horario = request.form['time']
-        cliente = request.form['cliente']  # Nome do dono do pet
-        nome_pet = request.form['nome_pet']  # Nome do pet
+        cliente = request.form['cliente']
+        nome_pet = request.form['nome_pet']
         descricao = request.form['description']
 
-        agendamento_data = {
-            'username': session['username'],
-            'data': data,
-            'horario': horario,
-            'cliente': cliente,  # Nome do dono do pet
-            'nome_pet': nome_pet,  # Adiciona o nome do pet
-            'descricao': descricao
-        }
-
         try:
+            # Converte a data e hora do agendamento para um objeto datetime
+            data_hora_agendamento = datetime.strptime(f"{data} {horario}", "%Y-%m-%d %H:%M")
+            
+            # Obtém a data/hora atual
+            agora = datetime.now()
+
+            # Verifica se a data é retroativa
+            if data_hora_agendamento < agora:
+                return render_template('agendamento.html', 
+                    mensagem="Erro: Não é possível agendar para uma data/hora que já passou!")
+
+            # Aqui você pode adicionar outras validações se necessário
+            # Por exemplo, verificar se o horário está dentro do horário de funcionamento
+            hora = int(horario.split(':')[0])
+            if hora < 8 or hora >= 18:
+                return render_template('agendamento.html', 
+                    mensagem="Erro: Os agendamentos só podem ser feitos entre 8h e 18h!")
+
+            agendamento_data = {
+                'username': session['username'],
+                'data': data,
+                'horario': horario,
+                'cliente': cliente,
+                'nome_pet': nome_pet,
+                'descricao': descricao,
+                'data_criacao': agora
+            }
+
             db['Agendamentos'].insert_one(agendamento_data)
             mensagem = "Agendamento realizado com sucesso!"
+
+        except ValueError:
+            mensagem = "Erro: Data ou hora em formato inválido!"
         except Exception as e:
             mensagem = f"Erro ao agendar: {str(e)}"
 
