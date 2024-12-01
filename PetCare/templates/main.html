@@ -253,5 +253,31 @@
             <span class="btn-text">Sair da Conta</span>
         </a>
     </div>
+    <script>
+        // Inicializa a conexão com o servidor
+        const socket = new WebSocket('ws://localhost:12345');
+
+        socket.addEventListener('open', (event) => {
+            console.log('Conectado ao servidor de notificações');
+        });
+
+        socket.addEventListener('message', (event) => {
+            const message = event.data;
+            console.log('Mensagem recebida:', message);
+            showNotification(message);
+        });
+
+        socket.addEventListener('error', (error) => {
+            console.error('Erro na conexão:', error);
+        });
+
+        socket.addEventListener('close', () => {
+            console.log('Conexão fechada');
+            // Tentar reconectar após 5 segundos
+            setTimeout(() => {
+                window.location.reload();
+            }, 5000);
+        });
+    </script>
 </body>
 </html>
